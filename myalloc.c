@@ -51,8 +51,9 @@ void *myalloc(int size)
                 b->next = &(b[block_to_block_offset]); // set new block as current block's next pointer
             }
 
-            b->in_use = 1;
+            // TODO: move this expression (or block) into the if block above
             b->size = padded_requested_space;
+            b->in_use = 1;
 
             return PTR_OFFSET(b, padded_block_size);
         }
@@ -105,39 +106,54 @@ int main(void)
     // ====== Example 1 ======
     void *p;
 
-    p = myalloc(512);
+    p = myalloc(10);
     print_data();
 
     myfree(p);
     print_data();
 
     // ====== Example 2 ======
-    head = NULL;
+    void *q;
 
-    myalloc(10);
+    p = myalloc(10);
     print_data();
-    myalloc(20);
+    q = myalloc(20);
     print_data();
-    myalloc(30);
+
+    myfree(p);
     print_data();
-    myalloc(40);
-    print_data();
-    myalloc(50);
+    myfree(q);
     print_data();
 
     // ====== Example 3 ======
-    head = NULL;
+    p = myalloc(10);
+    print_data();
+    q = myalloc(20);
+    print_data();
 
-    myalloc(10);
-    print_data();
-    p = myalloc(20);
-    print_data();
-    myalloc(30);
+    myfree(q);
     print_data();
     myfree(p);
     print_data();
-    myalloc(40);
+
+    // ====== Example 4 ======
+    void *r, *s;
+
+    p = myalloc(10);
     print_data();
-    myalloc(10);
+    q = myalloc(20);
+    print_data();
+    r = myalloc(30);
+    print_data();
+    s = myalloc(40);
+    print_data();
+
+    myfree(q);
+    print_data();
+    myfree(p);
+    print_data();
+    myfree(s);
+    print_data();
+    myfree(r);
     print_data();
 }

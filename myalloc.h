@@ -11,9 +11,10 @@
 
 struct block
 {
-    struct block *next;
     int size;
     int in_use;
+    struct block *next;
+    struct block *previous;
 };
 
 void *myalloc(int size);
