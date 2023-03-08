@@ -63,7 +63,23 @@ void *myalloc(int size)
  */
 void mergeblocks(void)
 {
-    return;
+    struct block *b = head;
+
+    while (b->next != NULL)
+    {
+        bool block_in_use = b->in_use;
+        bool next_in_use = (b->next)->in_use;
+
+        if (!block_in_use && !next_in_use)
+        {
+            b->size = b->size + PADDED_SIZE(sizeof(struct block)) + PADDED_SIZE(b->next->size);
+            b->next = b->next->next;
+        }
+        else
+        {
+            b = b->next;
+        }
+    }
 }
 
 /**
