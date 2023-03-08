@@ -9,7 +9,7 @@ void *myalloc(int size)
 {
     int padded_block_size = PADDED_SIZE(sizeof(struct block));
 
-    // initialize the heap
+    // initialize
     if (head == NULL)
     {
         head = mmap(
@@ -21,34 +21,31 @@ void *myalloc(int size)
 
     struct block *b = head;
 
-    // traverse the linked list
+    // traverse
     while (b != NULL)
     {
         bool is_free = !b->in_use;
         bool has_enough_room = (b->size >= size);
 
+        // located sufficient space!
         if (is_free && has_enough_room)
         {
             int padded_requested_space = PADDED_SIZE(size);
             int block_to_block_offset = padded_requested_space + padded_block_size;
-
-            // space is big enough to split if current block size is greater than:
-            // the requested size + the padded block + a minimum allocation of 16
             int required_space = (block_to_block_offset + ALIGNMENT);
             bool block_splittable = (bool)(b->size >= required_space);
 
+            // split block for future allocation
             if (block_splittable)
             {
-                // create new block for the remaining unused space
                 int new_size = (b->size - block_to_block_offset);
                 struct block new = {
                     .next = NULL,
                     .size = new_size,
                     .in_use = 0};
 
-                // "wire" new block node into the linked list
-                b[block_to_block_offset] = new;        // place in memory at a relative location
-                b->next = &(b[block_to_block_offset]); // set new block as current block's next pointer
+                b[block_to_block_offset] = new;
+                b->next = &(b[block_to_block_offset]);
                 b->size = padded_requested_space;
             }
 
@@ -61,6 +58,9 @@ void *myalloc(int size)
     return NULL;
 }
 
+/**
+ * Consolodate consecutive blocks of memory not in use.
+ */
 void mergeblocks(void)
 {
     return;
@@ -77,6 +77,8 @@ void myfree(void *p)
     // navigate to header block of given pointer
     struct block *b = (p - sizeof(struct block));
     b->in_use = 0;
+
+    mergeblocks();
 }
 
 /**
