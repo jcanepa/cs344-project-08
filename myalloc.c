@@ -61,6 +61,11 @@ void *myalloc(int size)
     return NULL;
 }
 
+void mergeblocks(void)
+{
+    return;
+}
+
 /**
  * Free allocated memory of a given pointer.
  */

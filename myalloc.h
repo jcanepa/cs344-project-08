@@ -18,5 +18,6 @@ struct block
 };
 
 void *myalloc(int size);
+void mergeblocks(void);
 void myfree(void *p);
 void print_data(void);
