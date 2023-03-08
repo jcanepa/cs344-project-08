@@ -49,10 +49,9 @@ void *myalloc(int size)
                 // "wire" new block node into the linked list
                 b[block_to_block_offset] = new;        // place in memory at a relative location
                 b->next = &(b[block_to_block_offset]); // set new block as current block's next pointer
+                b->size = padded_requested_space;
             }
 
-            // TODO: move this expression (or block) into the if block above
-            b->size = padded_requested_space;
             b->in_use = 1;
 
             return PTR_OFFSET(b, padded_block_size);
