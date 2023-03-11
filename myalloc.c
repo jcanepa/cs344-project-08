@@ -44,8 +44,10 @@ void *myalloc(int size)
                     .size = new_size,
                     .in_use = 0};
 
-                b[block_to_block_offset] = new;
-                b->next = &(b[block_to_block_offset]);
+                struct block *new_pointer = PTR_OFFSET(b, block_to_block_offset);
+                *new_pointer = new;
+
+                b->next = new_pointer;
                 b->size = padded_requested_space;
             }
 
